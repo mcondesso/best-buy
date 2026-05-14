@@ -27,16 +27,16 @@ def print_menu():
     print("4. Quit")
 
 
-def get_user_choice() -> int:
+def get_user_choice() -> int | None:
     """Prompt the user to select a menu option and return their choice."""
     print_menu()
     choice = None
     try:
         choice = int(input("Please choose a number: "))
+        if choice < 1 or choice > 4:
+            choice = None
     except ValueError:
         print("Error with your choice! Try again!")
-    if choice < 1 or choice > 4:
-        choice = None
     return choice
 
 
@@ -53,6 +53,61 @@ def list_all_products(store: Store):
     print("------")
 
 
+def get_product_number(num_products: int) -> int | None:
+    while True:
+        choice = input("Which product # do you want? ")
+        if not choice:
+            return None
+        try:
+            choice = int(choice)
+            if 1 <= choice <= num_products:
+                return choice
+            else:
+                raise ValueError()
+        except ValueError:
+            print("Invalid choice. Please enter the number of the product you want.")
+
+
+def get_product_quantity(max_quantity: int) -> int | None:
+    while True:
+        choice = input("What amount do you want? ")
+        if not choice:
+            return None
+        try:
+            choice = int(choice)
+            if 0 < choice <= max_quantity:
+                return choice
+            else:
+                raise ValueError("")
+        except ValueError:
+            print(f"Invalid quantity. Please pick between 1 and {max_quantity}.")
+
+
+def make_order(store: Store):
+    """Prompt the user to create an order by selecting products and quantities.
+
+    Args:
+        store (Store): The Store instance from which to retrieve products for the order.
+    """
+    list_all_products(store)
+    print("When you want to finish order, enter empty text.")
+    total_order = []
+    products = store.get_all_products()
+    while True:
+        product_number = get_product_number(len(products))
+        if product_number is None:
+            break
+        selected_product = products[product_number - 1]
+        product_quantity = get_product_quantity(selected_product.get_quantity())
+        if product_quantity is None:
+            break
+        total_order.append((selected_product, product_quantity))
+        print("Product added to list!")
+    print("********")
+    total_cost = store.order(total_order)
+    print(f"Order made! Total payment: ${total_cost:.2f}")
+
+
 def start(store: Store):
     """Start the main loop of the store application, allowing the user to interact with the menu."""
     while True:
@@ -66,7 +121,7 @@ def start(store: Store):
         elif choice == 2:
             print(f"Total of {store.get_total_quantity()} items in store")
         elif choice == 3:
-            print("Ordering is not implemented yet.")
+            make_order(store)
 
 
 def main():
