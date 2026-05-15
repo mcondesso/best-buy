@@ -1,5 +1,5 @@
 from products import Product
-from store import Store
+from store import Store, StoreError
 
 
 def setup_initial_store() -> Store:
@@ -94,7 +94,9 @@ def get_product_quantity(max_quantity: int) -> int | None:
                 return choice
             raise ValueError()
         except ValueError:
-            print(f"Invalid quantity. Please pick between 1 and {max_quantity} (available amount).")
+            print(
+                f"Invalid quantity. Please pick between 1 and {max_quantity} (available amount)."
+            )
 
 
 def make_order(store: Store):
@@ -117,9 +119,13 @@ def make_order(store: Store):
             break
         total_order.append((selected_product, product_quantity))
         print("Product added to list!")
+
     print("********")
-    total_cost = store.order(total_order)
-    print(f"Order made! Total payment: ${total_cost:.2f}")
+    try:
+        total_cost = store.order(total_order)
+        print(f"Order made! Total payment: ${total_cost:.2f}")
+    except StoreError as error:
+        print(error)
 
 
 def start(store: Store):

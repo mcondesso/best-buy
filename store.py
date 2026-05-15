@@ -1,4 +1,12 @@
-from products import Product
+from products import Product, ProductError
+
+
+class StoreError(Exception):
+    """Custom exception for store-related errors."""
+
+
+class OrderError(StoreError):
+    """Raised when there is an issue with processing an order."""
 
 
 class Store:
@@ -61,5 +69,11 @@ class Store:
         """
         total_cost = 0.0
         for product, quantity in shopping_list:
-            total_cost += product.buy(quantity)
+            try:
+                total_cost += product.buy(quantity)
+            except ProductError as error:
+                raise OrderError(
+                    f"Error purchasing '{product.get_name()}': {error}"
+                ) from error
+
         return total_cost

@@ -1,3 +1,15 @@
+class ProductError(Exception):
+    """Custom exception for product-related errors."""
+
+
+class InvalidQuantityError(ProductError):
+    """Raised when an invalid quantity is provided for a product."""
+
+
+class NotEnoughStockError(ProductError):
+    """Raised when trying to buy more than available stock."""
+
+
 class Product:
     """Represents a product available in the store inventory.
 
@@ -29,6 +41,10 @@ class Product:
         self.price = price
         self.quantity = quantity
         self.active = True
+
+    def get_name(self) -> str:
+        """Return the name of the product."""
+        return self.name
 
     def get_quantity(self) -> int:
         """Return the current stock quantity for this product."""
@@ -76,8 +92,8 @@ class Product:
             ValueError: If requested quantity is not positive or exceeds available stock.
         """
         if quantity <= 0:
-            raise ValueError("Quantity to buy must be positive.")
+            raise InvalidQuantityError("Quantity to buy must be positive.")
         if quantity > self.quantity:
-            raise ValueError("Not enough stock available.")
+            raise NotEnoughStockError("Not enough stock available.")
         self.quantity -= quantity
         return self.price * quantity
