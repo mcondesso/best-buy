@@ -54,6 +54,14 @@ def list_all_products(store: Store):
 
 
 def get_product_number(num_products: int) -> int | None:
+    """Prompt the user to select a product number from the list.
+
+    Args:
+        num_products (int): The total number of products available.
+
+    Returns:
+        int | None: The selected product number (1-based), or None if user cancels.
+    """
     while True:
         choice = input("Which product # do you want? ")
         if not choice:
@@ -62,25 +70,31 @@ def get_product_number(num_products: int) -> int | None:
             choice = int(choice)
             if 1 <= choice <= num_products:
                 return choice
-            else:
-                raise ValueError()
+            raise ValueError()
         except ValueError:
             print("Invalid choice. Please enter the number of the product you want.")
 
 
 def get_product_quantity(max_quantity: int) -> int | None:
+    """Prompt the user to enter the quantity for a product.
+
+    Args:
+        max_quantity (int): The maximum available quantity for the product.
+
+    Returns:
+        int | None: The selected quantity, or None if user cancels.
+    """
     while True:
-        choice = input("What amount do you want? ")
+        choice = input(f"What amount do you want? We have {max_quantity} available: ")
         if not choice:
             return None
         try:
             choice = int(choice)
             if 0 < choice <= max_quantity:
                 return choice
-            else:
-                raise ValueError("")
+            raise ValueError()
         except ValueError:
-            print(f"Invalid quantity. Please pick between 1 and {max_quantity}.")
+            print(f"Invalid quantity. Please pick between 1 and {max_quantity} (available amount).")
 
 
 def make_order(store: Store):
@@ -114,9 +128,9 @@ def start(store: Store):
         choice = get_user_choice()
         if choice is None:
             continue
-        elif choice == 4:
+        if choice == 4:
             break
-        elif choice == 1:
+        if choice == 1:
             list_all_products(store)
         elif choice == 2:
             print(f"Total of {store.get_total_quantity()} items in store")
@@ -125,6 +139,10 @@ def start(store: Store):
 
 
 def main():
+    """Main entry point for the Best Buy store application.
+
+    Sets up the initial store and starts the interactive menu loop.
+    """
     best_buy = setup_initial_store()
 
     start(best_buy)

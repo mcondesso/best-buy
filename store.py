@@ -48,11 +48,13 @@ class Store:
         """
         return [product for product in self.products if product.is_active()]
 
-    def order(self, shopping_list: tuple[Product, int]) -> float:
+    @staticmethod
+    def order(shopping_list: list[tuple[Product, int]]) -> float:
         """Calculate the total cost of an order based on a shopping list.
 
         Args:
-            shopping_list (tuple): A list of tuples, where each tuple contains a Product instance and the desired quantity.
+            shopping_list: A list of tuples, each tuple contains a Product instance
+                and the desired quantity.
 
         Returns:
             float: The total cost of the order.

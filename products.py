@@ -59,7 +59,7 @@ class Product:
         """Mark the product as inactive and unavailable for purchase."""
         self.active = False
 
-    def show(self) -> str:
+    def show(self):
         """Print a summary of the product details."""
         print(f"{self.name}, Price: {self.price:.2f}, Quantity: {self.quantity}")
 
@@ -67,7 +67,7 @@ class Product:
         """Purchase a quantity of the product and reduce stock.
 
         Args:
-            quantity (int): Number of units to buy. Must be positive and no greater than current stock.
+            quantity (int): Number of units to buy. Must be positive no exceed stock.
 
         Returns:
             float: Total cost of the purchase.
