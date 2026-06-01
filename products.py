@@ -40,7 +40,7 @@ class Product:
         self.name = name
         self.price = price
         self.quantity = quantity
-        self.active = True
+        self.active = quantity > 0
 
     def get_name(self) -> str:
         """Return the name of the product."""
@@ -62,6 +62,7 @@ class Product:
         if quantity < 0:
             raise ValueError("Quantity cannot be negative.")
         self.quantity = quantity
+        self.active = quantity > 0
 
     def is_active(self) -> bool:
         """Return whether the product is currently active."""
@@ -83,17 +84,20 @@ class Product:
         """Purchase a quantity of the product and reduce stock.
 
         Args:
-            quantity (int): Number of units to buy. Must be positive no exceed stock.
+            quantity (int): Number of units to buy. Must be positive and no greater than available stock.
 
         Returns:
             float: Total cost of the purchase.
 
         Raises:
-            ValueError: If requested quantity is not positive or exceeds available stock.
+            InvalidQuantityError: If the requested quantity is not positive.
+            NotEnoughStockError: If the requested quantity exceeds available stock.
         """
         if quantity <= 0:
             raise InvalidQuantityError("Quantity to buy must be positive.")
         if quantity > self.quantity:
             raise NotEnoughStockError("Not enough stock available.")
         self.quantity -= quantity
+        if self.quantity == 0:
+            self.active = False
         return self.price * quantity
